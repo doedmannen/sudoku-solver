@@ -10,8 +10,10 @@
 9 8 7 6 5 4 3 2 1
 
 */
-// Grid for the sudoku
+// Grid for the sudo
+
 let gridCells = [];
+let solved = false;
 
 createGrid();
 printGrid();
@@ -33,7 +35,52 @@ function resetGrid() {
       gridCells[r][c].soft = true;
     }
   }
+
   printGrid();
+}
+
+
+function fillGrid() {
+
+  newEntry(1, 1, 5);
+  newEntry(1, 2, 3);
+  newEntry(1, 5, 7);
+
+  newEntry(2, 1, 6);
+  newEntry(2, 3, 1);
+  newEntry(2, 4, 9);
+  newEntry(2, 5, 5);
+
+  newEntry(3, 2, 9);
+  newEntry(3, 3, 8);
+  newEntry(3, 8, 6);
+
+  newEntry(4, 1, 8);
+  newEntry(4, 5, 6);
+  newEntry(4, 9, 3);
+
+  newEntry(5, 1, 4);
+  newEntry(5, 4, 8);
+  newEntry(5, 6, 3);
+  newEntry(5, 9, 1);
+
+  newEntry(6, 1, 7);
+  newEntry(6, 5, 2);
+  newEntry(6, 9, 6);
+
+  newEntry(7, 2, 6);
+  newEntry(7, 7, 2);
+  newEntry(7, 8, 8);
+
+  newEntry(8, 4, 4);
+  newEntry(8, 5, 1);
+  newEntry(8, 6, 9);
+  newEntry(8, 9, 5);
+
+  newEntry(9, 5, 8);
+  newEntry(9, 8, 7);
+  newEntry(9, 9, 9);
+
 }
 
 function printGrid() {
@@ -52,14 +99,8 @@ function printGrid() {
 
 
 // Adds a value to a certain gridposition and changes the boolean soft to false
-function newEntry() {
-  let r = document.getElementById("row").value;
-  let c = document.getElementById("col").value;
-  let v = document.getElementById("val").value;
+function newEntry(r = document.getElementById("row").value, c = document.getElementById("col").value, v = document.getElementById("val").value) {
 
-  document.getElementById("row").value = "";
-  document.getElementById("col").value = "";
-  document.getElementById("val").value = "";
 
   if (v < 10 && v > 0 && r > 0 && r < 10 && c > 0 && c < 10) {
     r--;
@@ -67,44 +108,103 @@ function newEntry() {
     gridCells[r][c].value = v;
     gridCells[r][c].soft = false;
   }
+
+  document.getElementById("row").value = "";
+  document.getElementById("col").value = "";
+  document.getElementById("val").value = "";
+
   printGrid();
 }
 
-function solveSudoku() {
-  // Kryp framåt i grid och testa värden
-  crawl(0, 0);
-}
+
+
 
 function crawl(r, c) {
-  /*
-  öka r enligt c
-  Om r == 9
-  retun true;
-  */
-  if (c == 9) {
+
+  console.log("crawling into " + r + " " + c);
+
+  if(c === 9){
     r++;
     c = 0;
-    if (r == 9) {
-      return true;
+    if(r === 9){
+      console.log("Solved");
+      printGrid();
+      solved = true;
+      return 0;
     }
   }
 
-  /*
-  Hitta första giltiga värde för nuvarande ruta
-  Gå till nästa crawl(r, c+1)
-  så länge crawl == false
-  */
+  if(gridCells[r][c].soft){
 
+    let below = true;
 
-  /*
-  Om värde == 10
-  this.val = 0;
-  return false
-  */
+    while (below) {
 
+      gridCells[r][c].findVal();
 
+      if (gridCells[r][c].value < 10) {
 
+        crawl(r, (c+1));
 
+      } else {
 
+        gridCells[r][c].value = 0;
+        below = false;
 
+      }
+    }
+  } else {
+    crawl(r, (c+1));
+  }
 }
+
+
+// function crawl(r, c) {
+//
+//   if(solved)
+//     return 0;
+//
+//   if (c == 9) {
+//     r++;
+//     c = 0;
+//     if (r == 9) {
+//       console.log("Solved");
+//       printGrid();
+//       solved = true;
+//       return true;
+//     }
+//   }
+//
+//   console.log("crawling into row " + r + " col " + c);
+//
+//
+//   while(!solved){
+//
+//     if(!gridCells[r][c].soft){
+//
+//       crawl(r, (c+1));
+//
+//     } else {
+//
+//       let v = 0;
+//
+//       while(v < 9){
+//
+//         console.log("Testing row " + r + " col " + c);
+//
+//         v = gridCells[r][c].findVal(v);
+//
+//         if(v < 10){
+//
+//           crawl(r, (c+1));
+//
+//         } else {
+//
+//           break;
+//
+//         }
+//       }
+//     }
+//
+//   }
+// }
