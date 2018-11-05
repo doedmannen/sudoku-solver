@@ -35,7 +35,7 @@ function resetGrid() {
       gridCells[r][c].soft = true;
     }
   }
-
+  solved = false;
   printGrid();
 }
 
@@ -47,9 +47,9 @@ function fillGrid() {
   newEntry(1, 5, 7);
 
   newEntry(2, 1, 6);
-  newEntry(2, 3, 1);
-  newEntry(2, 4, 9);
-  newEntry(2, 5, 5);
+  newEntry(2, 4, 1);
+  newEntry(2, 5, 9);
+  newEntry(2, 6, 5);
 
   newEntry(3, 2, 9);
   newEntry(3, 3, 8);
@@ -121,7 +121,7 @@ function newEntry(r = document.getElementById("row").value, c = document.getElem
 
 function crawl(r, c) {
 
-  console.log("crawling into " + r + " " + c);
+  // console.log("crawling into " + r + " " + c);
 
   if(c === 9){
     r++;
@@ -157,54 +157,3 @@ function crawl(r, c) {
     crawl(r, (c+1));
   }
 }
-
-
-// function crawl(r, c) {
-//
-//   if(solved)
-//     return 0;
-//
-//   if (c == 9) {
-//     r++;
-//     c = 0;
-//     if (r == 9) {
-//       console.log("Solved");
-//       printGrid();
-//       solved = true;
-//       return true;
-//     }
-//   }
-//
-//   console.log("crawling into row " + r + " col " + c);
-//
-//
-//   while(!solved){
-//
-//     if(!gridCells[r][c].soft){
-//
-//       crawl(r, (c+1));
-//
-//     } else {
-//
-//       let v = 0;
-//
-//       while(v < 9){
-//
-//         console.log("Testing row " + r + " col " + c);
-//
-//         v = gridCells[r][c].findVal(v);
-//
-//         if(v < 10){
-//
-//           crawl(r, (c+1));
-//
-//         } else {
-//
-//           break;
-//
-//         }
-//       }
-//     }
-//
-//   }
-// }

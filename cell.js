@@ -9,9 +9,7 @@ class Cell {
 
 
   findVal() {
-
     do {
-      console.log("looking");
       this.value++;
     } while (!this.validValue());
 
@@ -20,31 +18,19 @@ class Cell {
 
   validValue() {
 
-    console.log("validate");
-
     // Testar rad och kolumn
     for (let i = 0; i < 9; i++) {
 
-      console.log("checking lines");
 
-      if(gridCells[this.r][i].value == this.value && this.r != i)
+      if(gridCells[this.r][i].value == this.value && this.c != i){
         return false;
+      }
 
-      if(gridCells[i][this.c].value == this.value && this.c != i)
+      if(gridCells[i][this.c].value == this.value && this.r != i){
         return false;
+      }
 
 
-      // if (i < this.r && gridCells[i][this.c].value == this.value)
-      //   return false;
-      //
-      // if (i < this.c && gridCells[this.r][i].value == this.value)
-      //   return false;
-      //
-      // if (!gridCells[i][this.c].soft && gridCells[i][this.c].value == this.value)
-      //   return false;
-      //
-      // if (!gridCells[this.r][i].soft && gridCells[this.r][i].value == this.value)
-      //   return false;
     }
 
 
@@ -55,17 +41,11 @@ class Cell {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
 
-        console.log("checking squares");
 
-        if(gridCells[(r+i)][c+j].value == this.value && gridCells[(r+i)][c+j] != this)
+        if(gridCells[(r+i)][c+j].value == this.value && gridCells[(r+i)][c+j] != this){
           return false;
+        }
 
-        //
-        // if ((r + i) < this.r || ((r + i) == this.r && (c + j) < this.c) && gridCells[(r + i)][(c + j)].value == this.value)
-        //   return false;
-        //
-        // if (!gridCells[(r + i)][(c + j)].soft && gridCells[(r + i)][(c + j)].value == v && !((r + i) == this.r && (c + j) == this.c))
-        //   return false;
 
       }
     }
