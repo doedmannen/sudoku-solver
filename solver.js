@@ -1,16 +1,15 @@
 /*
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
-9 8 7 6 5 4 3 2 1
+TODO:
+
+Needs to be able to tell the user if a sudoku is incorrect
+
+Is no numbers are entered, the solve gets stuck on "solved" log and loops forever
+
+Needs better presentation in HTML CSS
+
+Maybe update so we more easily can update the grid? 
 
 */
-// Grid for the sudo
 
 let gridCells = [];
 let solved = false;
@@ -89,7 +88,7 @@ function printGrid() {
     for (let c = 0; c < 9; c++) {
       output += "" + gridCells[r][c].value;
       if (c < 8) {
-        output += " - ";
+        output += " ";
       }
     }
     output += "<br>"
