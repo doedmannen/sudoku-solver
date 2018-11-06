@@ -1,0 +1,89 @@
+*{
+  font-size: 16pt;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body{
+  height: 90vh;
+  overflow: hidden;
+}
+
+main{
+  height: 100%;
+  margin: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.sudokuspacer {
+  padding: 5px 10px;
+  flex: 1;
+  cursor: pointer;
+}
+
+
+
+.flexbox{
+  display: flex;
+}
+
+.b_left{
+  border-left: 1px solid black;
+}
+
+.b_right{
+  border-right: 1px solid black;
+}
+
+.b_top{
+  border-top: 1px solid black;
+}
+
+.b_bottom{
+  border-bottom: 1px solid black;
+}
+
+.dir-col{
+  flex-direction: column;
+}
+
+.dir-row{
+  flex-direction: row;
+}
+
+.b_fat{
+  border-width: 2px;
+}
+
+
+.pointer{
+  cursor: pointer;
+}
+
+#output{
+  color: black;
+  padding: 10px;
+}
+
+#numbers > section > p{
+  font-size: 48pt;
+  padding: 15px 30px;
+}
+
+#numbers{
+  display: none;
+}
+
+#numSelect{
+  text-align: center;
+}
+
+
+#help{
+  display: none;
+  cursor: pointer;
+  text-align: center;
+}

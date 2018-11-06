@@ -1,21 +1,30 @@
 /*
 TODO:
 
-Needs to be able to tell the user if a sudoku is incorrect
 
-Is no numbers are entered, the solve gets stuck on "solved" log and loops forever
-
-Needs better presentation in HTML CSS
-
-Maybe update so we more easily can update the grid? 
 
 */
 
-let gridCells = [];
-let solved = false;
+let gridCells = [];   // Array for sudoku grid
+let solved = false;   // Is the sudoku solved?
+let change_r;         // Keeps track of which cell is being changed by user
+let change_c;         // Keeps track of which cell is being changed by user
+let display = 1;      // Keeps track of what to display (board or input)
+let help = -1;        // Keeps track of if the user is in help
 
+
+/*
+ On first run:
+ Create the 2D array containing our sudoku grid and update it on screen
+*/
 createGrid();
-printGrid();
+updateGrid();
+
+/*
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤       GRID       ¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+*/
 
 // Creates a 2D array with new cells
 function createGrid() {
@@ -27,6 +36,10 @@ function createGrid() {
   }
 }
 
+/*
+  Loops all the cells in the sudoku grid and sets their value to 0
+  and soft = true
+*/
 function resetGrid() {
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
@@ -35,117 +48,160 @@ function resetGrid() {
     }
   }
   solved = false;
-  printGrid();
+  updateGrid();
+
+  document.getElementById('output').style.color = "black";
+  document.getElementById('output').innerHTML = "Enter your numbers";
 }
 
 
-function fillGrid() {
 
-  newEntry(1, 1, 5);
-  newEntry(1, 2, 3);
-  newEntry(1, 5, 7);
+/*
+  Updates the view of sudoku
+  Cells containing the value 0 are displayed as 0 but with color white
+  Cells containing a value other than 0 is displayed with color black
+  Cells that are hard (not soft) are given the background color yellow
+*/
 
-  newEntry(2, 1, 6);
-  newEntry(2, 4, 1);
-  newEntry(2, 5, 9);
-  newEntry(2, 6, 5);
-
-  newEntry(3, 2, 9);
-  newEntry(3, 3, 8);
-  newEntry(3, 8, 6);
-
-  newEntry(4, 1, 8);
-  newEntry(4, 5, 6);
-  newEntry(4, 9, 3);
-
-  newEntry(5, 1, 4);
-  newEntry(5, 4, 8);
-  newEntry(5, 6, 3);
-  newEntry(5, 9, 1);
-
-  newEntry(6, 1, 7);
-  newEntry(6, 5, 2);
-  newEntry(6, 9, 6);
-
-  newEntry(7, 2, 6);
-  newEntry(7, 7, 2);
-  newEntry(7, 8, 8);
-
-  newEntry(8, 4, 4);
-  newEntry(8, 5, 1);
-  newEntry(8, 6, 9);
-  newEntry(8, 9, 5);
-
-  newEntry(9, 5, 8);
-  newEntry(9, 8, 7);
-  newEntry(9, 9, 9);
-
-}
-
-function printGrid() {
-  let output = "";
+function updateGrid() {
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
-      output += "" + gridCells[r][c].value;
-      if (c < 8) {
-        output += " ";
+      let e_id = r + "" + c;
+      let html_elem = document.getElementById(e_id);
+      html_elem.innerHTML = gridCells[r][c].value;
+      if(gridCells[r][c].value === 0){
+        html_elem.style.color = "white";
+      } else {
+        html_elem.style.color = "black";
+      }
+      if(!gridCells[r][c].soft){
+        html_elem.style.backgroundColor = "#FF0";
+      } else {
+        html_elem.style.backgroundColor = "#FFF";
       }
     }
-    output += "<br>"
   }
-  document.getElementById('output').innerHTML = output;
+}
+
+/*
+  Sets which cell in the grid the user wants to update
+  and changes the display to number selection
+*/
+function changeVal(r, c) {
+  document.getElementById('numSelect').innerHTML = "Select number for position in <br> row " + (r+1) + " column " + (c+1);
+  change_r = r;
+  change_c = c;
+  changeDisplay();
+}
+
+/*
+  Adds a value to a certain gridposition and changes the boolean soft to false
+  Changes display back to sudoku and updates the grid
+*/
+function newEntry(v) {
+
+  gridCells[change_r][change_c].value = v;
+  if(v != 0){
+    gridCells[change_r][change_c].soft = false;
+  } else {
+    gridCells[change_r][change_c].soft = true;
+  }
+
+  change_c = null;
+  change_r = null;
+  changeDisplay();
+  updateGrid();
 }
 
 
-// Adds a value to a certain gridposition and changes the boolean soft to false
-function newEntry(r = document.getElementById("row").value, c = document.getElementById("col").value, v = document.getElementById("val").value) {
+
+/*
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤       SOLVE      ¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+*/
 
 
-  if (v < 10 && v > 0 && r > 0 && r < 10 && c > 0 && c < 10) {
-    r--;
-    c--;
-    gridCells[r][c].value = v;
-    gridCells[r][c].soft = false;
+/*
+  Is called when the user wants to solve the sudoku
+  The grid is validated (is the user input correct?)
+  If the input was correct we start crawl with a delay (needed for text update)
+*/
+function solve() {
+  if(validateGrid()){
+    document.getElementById('output').style.color = "black";
+    document.getElementById('output').innerHTML = "Solving, please hold...";
+    window.setTimeout(crawl, 500); // wait 500 milli sec before crawling
+  } else {
+    document.getElementById('output').style.color = "red";
+    document.getElementById('output').innerHTML = "Grid is not valid, please reset and try again";
   }
-
-  document.getElementById("row").value = "";
-  document.getElementById("col").value = "";
-  document.getElementById("val").value = "";
-
-  printGrid();
 }
 
 
+/*
+  Before solve calls crawl, we need to validate that the user input
+  was correct and follows the rules of a sudoku
+  Loops the entire grid and checks that all of the hard cells are
+  correct
+*/
+function validateGrid() {
+  for(let r = 0; r < 9; r++){
+    for(let c = 0; c < 9; c++){
+
+      if(!gridCells[r][c].soft){
+
+        if(!gridCells[r][c].validValue()){
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
 
 
-function crawl(r, c) {
+/*
+  Function for solving the sudoku
+  It crawls through the grid and backtracks when a value gets to 10
+  Returns 0 when we solve
+*/
+function crawl(r = 0, c = 0) {
 
-  // console.log("crawling into " + r + " " + c);
+  if(solved){
+    return 0;
+  }
 
-  if(c === 9){
+  // Check if row and column is correct, if row is 9 the sudoku is solved
+  if (c === 9) {
     r++;
     c = 0;
-    if(r === 9){
-      console.log("Solved");
-      printGrid();
+    if (r === 9) {
+      document.getElementById('output').style.color = "green";
+      document.getElementById('output').innerHTML = "Solved!";
+
+      updateGrid();
       solved = true;
       return 0;
     }
   }
 
-  if(gridCells[r][c].soft){
+
+  // Checks if the current cell is soft, only soft cells should be changed
+  if (gridCells[r][c].soft) {
 
     let below = true;
 
-    while (below) {
+    while (below) { // Loop until we reach 10
 
-      gridCells[r][c].findVal();
+      gridCells[r][c].findVal(); // Get first valid value of cell
 
-      if (gridCells[r][c].value < 10) {
+      if (gridCells[r][c].value < 10) { // Is it below 10?
 
-        crawl(r, (c+1));
+        crawl(r, (c + 1)); // Crawl to next cell
 
-      } else {
+      } else { // If 10 is reached, end the loop and backtrack
 
         gridCells[r][c].value = 0;
         below = false;
@@ -153,6 +209,43 @@ function crawl(r, c) {
       }
     }
   } else {
-    crawl(r, (c+1));
+    crawl(r, (c + 1)); // Hard cells are skipped
+  }
+}
+
+
+
+
+/*
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤     USER VIEW    ¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+*/
+
+/*
+  Changes the display when user is entering a new value to the grid
+*/
+function changeDisplay() {
+  display *= -1;
+  if(display === 1){
+    document.getElementById('sudoku').style.display = "flex";
+    document.getElementById('numbers').style.display = "none";
+  } else {
+    document.getElementById('sudoku').style.display = "none";
+    document.getElementById('numbers').style.display = "flex";
+  }
+}
+
+/*
+  Changes the display when user is in help
+*/
+function helpMe() {
+  help *= -1;
+  if(help === 1){
+    document.getElementById('sudoku').style.display = "none";
+    document.getElementById('help').style.display = "flex";
+  } else {
+    document.getElementById('sudoku').style.display = "flex";
+    document.getElementById('help').style.display = "none";
   }
 }

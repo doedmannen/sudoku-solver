@@ -2,22 +2,302 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku solver</title>
+    <link rel="stylesheet" href="master.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   </head>
   <body>
-    <div>
-      <span id="output">
-        <!-- output does here -->
-      </span><br><br>
-      Enter numbers we know: <br>
-      Row: <input type="number" id="row"><br>
-      Col: <input type="number" id="col"><br>
-      Value: <input type="number" id="val"><br>
-      <button type="button" onclick="newEntry()">Add to grid</button>
-      <button type="button" onclick="resetGrid()">Reset grid</button>
-      <button type="button" onclick="crawl(0, 0)">Solve sudoku</button>
-      <button type="button" onclick="fillGrid()">Fill grid</button>
-    </div>
+
+    <main class="flexbox" id="help" onclick="helpMe()">
+      <section class="flexbox dir-col">
+        <p>Enter the clues you have on the grid</p>
+        <p>If the clues are incorrect the solve won't run</p>
+        <p>Click anywhere to return</p>
+      </section>
+    </main>
+
+    <!-- Number selection -->
+    <main class="flexbox dir-col" id="numbers">
+      <p id="numSelect"></p>
+      <section class="pointer flexbox dir-row">
+        <p onclick="newEntry(1)">1</p>
+        <p onclick="newEntry(2)">2</p>
+        <p onclick="newEntry(3)">3</p>
+      </section>
+      <section class="pointer flexbox dir-row">
+        <p onclick="newEntry(4)">4</p>
+        <p onclick="newEntry(5)">5</p>
+        <p onclick="newEntry(6)">6</p>
+      </section>
+      <section class="pointer flexbox dir-row">
+        <p onclick="newEntry(7)">7</p>
+        <p onclick="newEntry(8)">8</p>
+        <p onclick="newEntry(9)">9</p>
+      </section>
+        <p class"pointer" onclick="newEntry(0)" id="removeNum">Remove number</p>
+    </main>
+    <!-- Number selection -->
+
+
+
+    <!-- sudoku -->
+    <main class="flexbox dir-col" id="sudoku">
+
+      <!-- output from solve -->
+      <p id="output">Enter your numbers</p>
+
+
+      <!-- beginning of sudoku display -->
+      <section class="flexbox dir-row">
+
+        <section class="flexbox dir-col">
+
+          <!-- Square one -->
+          <section class="b_top b_left b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="00" onclick="changeVal(0,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="01" onclick="changeVal(0,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="02" onclick="changeVal(0,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="10" onclick="changeVal(1,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="11" onclick="changeVal(1,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="12" onclick="changeVal(1,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="20" onclick="changeVal(2,0)" class="sudokuspacer b_right"> </p>
+              <p id="21" onclick="changeVal(2,1)" class="sudokuspacer b_right"> </p>
+              <p id="22" onclick="changeVal(2,2)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square one -->
+
+          <!-- Square two -->
+          <section class="b_left b_top b_bottom b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="30" onclick="changeVal(3,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="31" onclick="changeVal(3,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="32" onclick="changeVal(3,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="40" onclick="changeVal(4,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="41" onclick="changeVal(4,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="42" onclick="changeVal(4,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="50" onclick="changeVal(5,0)" class="sudokuspacer b_right"> </p>
+              <p id="51" onclick="changeVal(5,1)" class="sudokuspacer b_right"> </p>
+              <p id="52" onclick="changeVal(5,2)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square two -->
+
+          <!-- Square three -->
+          <section class="b_bottom b_left b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="60" onclick="changeVal(6,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="61" onclick="changeVal(6,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="62" onclick="changeVal(6,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="70" onclick="changeVal(7,0)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="71" onclick="changeVal(7,1)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="72" onclick="changeVal(7,2)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="80" onclick="changeVal(8,0)" class="sudokuspacer b_right"> </p>
+              <p id="81" onclick="changeVal(8,1)" class="sudokuspacer b_right"> </p>
+              <p id="82" onclick="changeVal(8,2)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square three -->
+
+        </section>
+
+        <section class="flexbox dir-col">
+
+          <!-- Square four -->
+          <section class="b_top b_left b_right b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="03" onclick="changeVal(0,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="04" onclick="changeVal(0,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="05" onclick="changeVal(0,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="13" onclick="changeVal(1,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="14" onclick="changeVal(1,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="15" onclick="changeVal(1,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="23" onclick="changeVal(2,3)" class="sudokuspacer b_right"> </p>
+              <p id="24" onclick="changeVal(2,4)" class="sudokuspacer b_right"> </p>
+              <p id="25" onclick="changeVal(2,5)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square four -->
+
+          <!-- Square five -->
+          <section class="b_left b_right b_top b_bottom b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="33" onclick="changeVal(3,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="34" onclick="changeVal(3,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="35" onclick="changeVal(3,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="43" onclick="changeVal(4,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="44" onclick="changeVal(4,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="45" onclick="changeVal(4,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="53" onclick="changeVal(5,3)" class="sudokuspacer b_right"> </p>
+              <p id="54" onclick="changeVal(5,4)" class="sudokuspacer b_right"> </p>
+              <p id="55" onclick="changeVal(5,5)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square five -->
+
+          <!-- Square six -->
+          <section class="b_bottom b_left b_right b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="63" onclick="changeVal(6,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="64" onclick="changeVal(6,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="65" onclick="changeVal(6,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="73" onclick="changeVal(7,3)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="74" onclick="changeVal(7,4)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="75" onclick="changeVal(7,5)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="83" onclick="changeVal(8,3)" class="sudokuspacer b_right"> </p>
+              <p id="84" onclick="changeVal(8,4)" class="sudokuspacer b_right"> </p>
+              <p id="85" onclick="changeVal(8,5)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square six -->
+
+        </section>
+
+        <section class="flexbox dir-col">
+
+          <!-- Square seven -->
+          <section class="b_top b_right b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="06" onclick="changeVal(0,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="07" onclick="changeVal(0,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="08" onclick="changeVal(0,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="16" onclick="changeVal(1,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="17" onclick="changeVal(1,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="18" onclick="changeVal(1,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="26" onclick="changeVal(2,6)" class="sudokuspacer b_right"> </p>
+              <p id="27" onclick="changeVal(2,7)" class="sudokuspacer b_right"> </p>
+              <p id="28" onclick="changeVal(2,8)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square seven -->
+
+          <!-- Square eight -->
+          <section class="b_right b_top b_bottom b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="36" onclick="changeVal(3,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="37" onclick="changeVal(3,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="38" onclick="changeVal(3,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="46" onclick="changeVal(4,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="47" onclick="changeVal(4,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="48" onclick="changeVal(4,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="56" onclick="changeVal(5,6)" class="sudokuspacer b_right"> </p>
+              <p id="57" onclick="changeVal(5,7)" class="sudokuspacer b_right"> </p>
+              <p id="58" onclick="changeVal(5,8)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square eight -->
+
+          <!-- Square nine -->
+          <section class="b_bottom b_right b_fat flexbox dir-col">
+            <!-- row 1 -->
+            <section class="flexbox dir-row">
+              <p id="66" onclick="changeVal(6,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="67" onclick="changeVal(6,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="68" onclick="changeVal(6,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 2 -->
+            <section class="flexbox dir-row">
+              <p id="76" onclick="changeVal(7,6)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="77" onclick="changeVal(7,7)" class="sudokuspacer b_right b_bottom"> </p>
+              <p id="78" onclick="changeVal(7,8)" class="sudokuspacer b_bottom"> </p>
+            </section>
+
+            <!-- row 3 -->
+            <section class="flexbox dir-row">
+              <p id="86" onclick="changeVal(8,6)" class="sudokuspacer b_right"> </p>
+              <p id="87" onclick="changeVal(8,7)" class="sudokuspacer b_right"> </p>
+              <p id="88" onclick="changeVal(8,8)" class="sudokuspacer "> </p>
+            </section>
+          </section>
+          <!-- Square nine -->
+
+        </section>
+
+
+      </section>
+      <!-- end of sudoku display -->
+
+      <section class="flexbox space-even">
+        <p class="sudokuspacer" onclick="helpMe()">Help</p>
+        <p class="sudokuspacer" onclick="resetGrid()">Reset</p>
+        <p class="sudokuspacer" onclick="solve()">Solve</p>
+      </section>
+    </main>
   </body>
 
 
