@@ -5,7 +5,7 @@ TODO:
 
 */
 
-let gridCells = [];   // Array for sudoku grid
+let gridCells;        // Array for sudoku grid
 let solved = false;   // Is the sudoku solved?
 let change_r;         // Keeps track of which cell is being changed by user
 let change_c;         // Keeps track of which cell is being changed by user
@@ -15,10 +15,9 @@ let help = -1;        // Keeps track of if the user is in help
 
 /*
  On first run:
- Create the 2D array containing our sudoku grid and update it on screen
+ Run a reset, which creates a new grid for us
 */
-createGrid();
-updateGrid();
+resetGrid();
 
 /*
 ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
@@ -28,6 +27,8 @@ updateGrid();
 
 // Creates a 2D array with new cells
 function createGrid() {
+  solved = false;
+  gridCells = [];
   for (let r = 0; r < 9; r++) {
     gridCells[r] = [];
     for (let c = 0; c < 9; c++) {
@@ -37,17 +38,10 @@ function createGrid() {
 }
 
 /*
-  Loops all the cells in the sudoku grid and sets their value to 0
-  and soft = true
+  Create a new 2D array containing our sudoku grid and update it on screen
 */
 function resetGrid() {
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      gridCells[r][c].value = 0;
-      gridCells[r][c].soft = true;
-    }
-  }
-  solved = false;
+  createGrid();
   updateGrid();
 
   document.getElementById('output').style.color = "black";
@@ -86,8 +80,11 @@ function updateGrid() {
 /*
   Sets which cell in the grid the user wants to update
   and changes the display to number selection
+  If sudoku is solved the function should return 0 immediately
 */
 function changeVal(r, c) {
+  if(solved)
+    return 0;
   document.getElementById('numSelect').innerHTML = "Select number for position in <br> row " + (r+1) + " column " + (c+1);
   change_r = r;
   change_c = c;
@@ -126,8 +123,12 @@ function newEntry(v) {
   Is called when the user wants to solve the sudoku
   The grid is validated (is the user input correct?)
   If the input was correct we start crawl with a delay (needed for text update)
+  If sudoku is solved the function should return 0 immediately
 */
 function solve() {
+  if(solved)
+    return 0;
+
   if(validateGrid()){
     document.getElementById('output').style.color = "black";
     document.getElementById('output').innerHTML = "Solving, please hold...";
